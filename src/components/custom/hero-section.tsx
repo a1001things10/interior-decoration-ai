@@ -1,17 +1,36 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Upload, Sparkles } from "lucide-react"
+import { Sparkles, Crown, Zap } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 
 export function HeroSection() {
   const { t } = useLanguage()
-  
+  const router = useRouter()
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
+
+  const handleCheckout = async () => {
+    setCheckoutLoading(true)
+    try {
+      const res = await fetch('/api/checkout', { method: 'POST' })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch {
+      alert('Erro ao iniciar pagamento. Tente novamente.')
+    } finally {
+      setCheckoutLoading(false)
+    }
+  }
+
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-blue-50 px-4 py-20 pt-24">
       <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-      
+
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
@@ -36,20 +55,26 @@ export function HeroSection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 pt-4">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 text-lg rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105"
+              {/* Free Plan */}
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => router.push('/result')}
+                className="px-8 py-6 text-lg rounded-full border-2 border-purple-300 text-purple-700 hover:bg-purple-50 transition-all duration-300 hover:scale-105 gap-2"
               >
-                <Upload className="w-5 h-5 mr-2" />
-                {t.uploadRoom}
+                <Zap className="w-5 h-5" />
+                Versão Gratuita
               </Button>
-              
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="px-8 py-6 text-lg rounded-full border-2 hover:bg-gray-50 transition-all duration-300"
+
+              {/* Premium */}
+              <Button
+                size="lg"
+                onClick={handleCheckout}
+                disabled={checkoutLoading}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 text-lg rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 gap-2"
               >
-                {t.viewExamples}
+                <Crown className="w-5 h-5 text-yellow-300" />
+                {checkoutLoading ? 'Aguarde...' : `${t.getStarted} — $7,00`}
               </Button>
             </div>
 
@@ -89,7 +114,7 @@ export function HeroSection() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-purple-900/30 to-transparent" />
             </div>
-            
+
             {/* Floating Card */}
             <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-2xl p-6 max-w-xs animate-float">
               <div className="flex items-center gap-4">

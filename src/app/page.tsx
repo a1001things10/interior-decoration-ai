@@ -4,6 +4,7 @@ import { HeroSection } from "@/components/custom/hero-section"
 import { HowItWorks } from "@/components/custom/how-it-works"
 import { StylesGallery } from "@/components/custom/styles-gallery"
 import { FeaturesSection } from "@/components/custom/features-section"
+import { PricingSection } from "@/components/custom/pricing-section"
 import { CTASection } from "@/components/custom/cta-section"
 import { Navbar } from "@/components/custom/navbar"
 
@@ -16,6 +17,7 @@ export default function Home() {
         <HowItWorks />
         <StylesGallery />
         <FeaturesSection />
+        <PricingSection />
         <CTASection />
       </main>
     </>
