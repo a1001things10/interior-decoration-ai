@@ -1,27 +1,25 @@
 "use client"
 
 import { useState, useRef, Suspense } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { usePlan } from '@/contexts/plan-context'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Download, Lock, Sparkles, Crown } from 'lucide-react'
 import Image from 'next/image'
+import { StripeBuyButton } from '@/components/custom/stripe-buy-button'
 
 const DEMO_RESULTS = [
   {
     style: 'Modern',
     image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop',
-    before: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop'
   },
   {
     style: 'Scandinavian',
     image: 'https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&h=600&fit=crop',
-    before: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop'
   },
   {
     style: 'Minimalist',
     image: 'https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&h=600&fit=crop',
-    before: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop'
   }
 ]
 
@@ -29,14 +27,12 @@ function ResultContent() {
   const { isPremium } = usePlan()
   const router = useRouter()
   const [downloading, setDownloading] = useState(false)
-  const [checkoutLoading, setCheckoutLoading] = useState(false)
   const resultRef = useRef<HTMLDivElement>(null)
 
   const handleDownloadPDF = async (imageUrl: string, style: string) => {
     if (!isPremium) return
     setDownloading(true)
     try {
-      // Create a printable PDF via window.print with a specific style
       const printWindow = window.open('', '_blank')
       if (printWindow) {
         printWindow.document.write(`
@@ -50,9 +46,7 @@ function ResultContent() {
                 p { color: #6b7280; margin-bottom: 16px; }
                 img { width: 100%; max-width: 800px; border-radius: 12px; }
                 .footer { margin-top: 20px; font-size: 12px; color: #9ca3af; }
-                @media print {
-                  body { padding: 0; }
-                }
+                @media print { body { padding: 0; } }
               </style>
             </head>
             <body>
@@ -60,9 +54,7 @@ function ResultContent() {
               <p>Resultado gerado com Inteligência Artificial</p>
               <img src="${imageUrl}" alt="${style}" />
               <div class="footer">interior-decoration.ai · Premium</div>
-              <script>
-                window.onload = function() { window.print(); window.close(); }
-              </script>
+              <script>window.onload = function() { window.print(); window.close(); }</script>
             </body>
           </html>
         `)
@@ -70,21 +62,6 @@ function ResultContent() {
       }
     } finally {
       setDownloading(false)
-    }
-  }
-
-  const handleCheckout = async () => {
-    setCheckoutLoading(true)
-    try {
-      const res = await fetch('/api/checkout', { method: 'POST' })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      }
-    } catch {
-      alert('Erro ao iniciar pagamento. Tente novamente.')
-    } finally {
-      setCheckoutLoading(false)
     }
   }
 
@@ -113,15 +90,7 @@ function ResultContent() {
               Premium Ativo
             </div>
           ) : (
-            <Button
-              onClick={handleCheckout}
-              disabled={checkoutLoading}
-              size="sm"
-              className="bg-purple-600 hover:bg-purple-700 text-white rounded-full gap-2"
-            >
-              <Crown className="w-4 h-4" />
-              {checkoutLoading ? 'Aguarde...' : 'Upgrade Premium — $7,00'}
-            </Button>
+            <StripeBuyButton />
           )}
         </div>
       </div>
@@ -134,14 +103,6 @@ function ResultContent() {
               <Lock className="w-4 h-4 inline mr-1" />
               Versão Gratuita — Resultados com marca d'água. Faça upgrade para remover.
             </span>
-            <Button
-              onClick={handleCheckout}
-              size="sm"
-              variant="secondary"
-              className="bg-white text-purple-600 hover:bg-gray-100 rounded-full text-xs h-7 px-3"
-            >
-              Upgrade por $7,00
-            </Button>
           </div>
         </div>
       )}
@@ -172,35 +133,32 @@ function ResultContent() {
 
                 {/* Watermark for free plan */}
                 {!isPremium && (
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="relative w-full h-full flex items-center justify-center">
-                      {/* Diagonal watermark text */}
-                      <div
-                        className="absolute inset-0 flex items-center justify-center"
-                        style={{ transform: 'rotate(-30deg)' }}
-                      >
-                        <div className="text-center space-y-2">
-                          {[0, 1, 2].map((row) => (
-                            <div key={row} className="flex gap-8">
-                              {[0, 1].map((col) => (
-                                <span
-                                  key={col}
-                                  className="text-white/40 font-bold text-sm whitespace-nowrap select-none"
-                                  style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}
-                                >
-                                  Interior Decoration
-                                </span>
-                              ))}
-                            </div>
-                          ))}
-                        </div>
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                    <div
+                      className="absolute inset-0 flex items-center justify-center"
+                      style={{ transform: 'rotate(-30deg)' }}
+                    >
+                      <div className="space-y-4">
+                        {[0, 1, 2, 3].map((row) => (
+                          <div key={row} className="flex gap-6">
+                            {[0, 1, 2].map((col) => (
+                              <span
+                                key={col}
+                                className="text-white/35 font-bold text-xs whitespace-nowrap select-none"
+                                style={{ textShadow: '0 1px 3px rgba(0,0,0,0.6)' }}
+                              >
+                                Interior Decoration
+                              </span>
+                            ))}
+                          </div>
+                        ))}
                       </div>
+                    </div>
 
-                      {/* Lock overlay */}
-                      <div className="absolute bottom-2 right-2 bg-black/50 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1">
-                        <Lock className="w-3 h-3 text-white" />
-                        <span className="text-white text-xs">Free</span>
-                      </div>
+                    {/* Lock badge */}
+                    <div className="absolute bottom-2 right-2 bg-black/50 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1">
+                      <Lock className="w-3 h-3 text-white" />
+                      <span className="text-white text-xs">Free</span>
                     </div>
                   </div>
                 )}
@@ -223,7 +181,6 @@ function ResultContent() {
                   </span>
                 </div>
 
-                {/* Action Buttons */}
                 {isPremium ? (
                   <Button
                     onClick={() => handleDownloadPDF(result.image, result.style)}
@@ -243,12 +200,6 @@ function ResultContent() {
                       <Lock className="w-4 h-4" />
                       Download bloqueado (Free)
                     </Button>
-                    <button
-                      onClick={handleCheckout}
-                      className="w-full text-xs text-purple-600 hover:text-purple-800 font-medium transition-colors"
-                    >
-                      Faça upgrade para baixar este resultado →
-                    </button>
                   </div>
                 )}
               </div>
@@ -261,19 +212,11 @@ function ResultContent() {
           <div className="mt-12 bg-purple-600 rounded-3xl p-8 text-white text-center">
             <Crown className="w-12 h-12 mx-auto mb-4 text-yellow-300" />
             <h2 className="text-3xl font-bold mb-3">Desbloqueie o Premium</h2>
-            <p className="text-purple-200 text-lg mb-6 max-w-lg mx-auto">
+            <p className="text-purple-200 text-lg mb-8 max-w-lg mx-auto">
               Remova a marca d'água, baixe todos os resultados em PDF e tenha acesso ilimitado.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button
-                onClick={handleCheckout}
-                disabled={checkoutLoading}
-                size="lg"
-                className="bg-white text-purple-600 hover:bg-gray-100 px-10 py-6 text-lg rounded-full font-bold shadow-xl"
-              >
-                <Crown className="w-5 h-5 mr-2 text-yellow-500" />
-                {checkoutLoading ? 'Aguarde...' : 'Premium por apenas $7,00'}
-              </Button>
+            <div className="flex justify-center">
+              <StripeBuyButton />
             </div>
             <p className="text-purple-300 text-sm mt-4">Pagamento único · Acesso vitalício</p>
           </div>

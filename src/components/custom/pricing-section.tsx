@@ -1,28 +1,12 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CheckCircle, X, Crown, Zap } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { StripeBuyButton } from "./stripe-buy-button"
 
 export function PricingSection() {
   const router = useRouter()
-  const [checkoutLoading, setCheckoutLoading] = useState(false)
-
-  const handleCheckout = async () => {
-    setCheckoutLoading(true)
-    try {
-      const res = await fetch('/api/checkout', { method: 'POST' })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      }
-    } catch {
-      alert('Erro ao iniciar pagamento. Tente novamente.')
-    } finally {
-      setCheckoutLoading(false)
-    }
-  }
 
   const freeFeatures = [
     { text: 'Acesso a 3 estilos básicos', included: true },
@@ -132,15 +116,8 @@ export function PricingSection() {
               ))}
             </ul>
 
-            <Button
-              size="lg"
-              onClick={handleCheckout}
-              disabled={checkoutLoading}
-              className="w-full bg-white text-purple-600 hover:bg-gray-100 rounded-xl py-6 text-lg font-bold shadow-xl gap-2"
-            >
-              <Crown className="w-5 h-5 text-yellow-500" />
-              {checkoutLoading ? 'Aguarde...' : 'Comprar Premium — $7,00'}
-            </Button>
+            {/* Stripe Buy Button nativo */}
+            <StripeBuyButton className="flex justify-center" />
 
             <p className="text-center text-purple-300 text-sm mt-3">
               Sem assinatura · Sem taxas ocultas

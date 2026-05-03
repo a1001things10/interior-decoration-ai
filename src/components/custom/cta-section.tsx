@@ -1,30 +1,14 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, CheckCircle, Crown, Zap } from "lucide-react"
+import { CheckCircle, Zap } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 import { useRouter } from "next/navigation"
+import { StripeBuyButton } from "./stripe-buy-button"
 
 export function CTASection() {
   const { t } = useLanguage()
   const router = useRouter()
-  const [checkoutLoading, setCheckoutLoading] = useState(false)
-
-  const handleCheckout = async () => {
-    setCheckoutLoading(true)
-    try {
-      const res = await fetch('/api/checkout', { method: 'POST' })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      }
-    } catch {
-      alert('Erro ao iniciar pagamento. Tente novamente.')
-    } finally {
-      setCheckoutLoading(false)
-    }
-  }
 
   return (
     <section className="py-20 px-4 bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 relative overflow-hidden">
@@ -52,17 +36,8 @@ export function CTASection() {
             Versão Gratuita
           </Button>
 
-          {/* Premium Plan */}
-          <Button
-            size="lg"
-            onClick={handleCheckout}
-            disabled={checkoutLoading}
-            className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-6 text-lg rounded-full shadow-2xl hover:shadow-white/50 transition-all duration-300 hover:scale-105 font-bold gap-2"
-          >
-            <Crown className="w-5 h-5 text-yellow-500" />
-            {checkoutLoading ? 'Aguarde...' : `${t.getStarted} — $7,00`}
-            <ArrowRight className="w-5 h-5" />
-          </Button>
+          {/* Stripe Buy Button */}
+          <StripeBuyButton />
         </div>
 
         <div className="flex items-center justify-center gap-2 mt-6 text-white/80">

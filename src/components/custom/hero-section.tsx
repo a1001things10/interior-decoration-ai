@@ -1,31 +1,15 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Sparkles, Crown, Zap } from "lucide-react"
+import { Sparkles, Zap } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { StripeBuyButton } from "./stripe-buy-button"
 
 export function HeroSection() {
   const { t } = useLanguage()
   const router = useRouter()
-  const [checkoutLoading, setCheckoutLoading] = useState(false)
-
-  const handleCheckout = async () => {
-    setCheckoutLoading(true)
-    try {
-      const res = await fetch('/api/checkout', { method: 'POST' })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      }
-    } catch {
-      alert('Erro ao iniciar pagamento. Tente novamente.')
-    } finally {
-      setCheckoutLoading(false)
-    }
-  }
 
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-blue-50 px-4 py-20 pt-24">
@@ -66,16 +50,8 @@ export function HeroSection() {
                 Versão Gratuita
               </Button>
 
-              {/* Premium */}
-              <Button
-                size="lg"
-                onClick={handleCheckout}
-                disabled={checkoutLoading}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 text-lg rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 gap-2"
-              >
-                <Crown className="w-5 h-5 text-yellow-300" />
-                {checkoutLoading ? 'Aguarde...' : `${t.getStarted} — $7,00`}
-              </Button>
+              {/* Stripe Buy Button */}
+              <StripeBuyButton />
             </div>
 
             {/* Stats */}
