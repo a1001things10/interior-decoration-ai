@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { CheckCircle, X, Crown, Zap } from "lucide-react"
+import { CheckCircle, X, Diamond, Zap, Crown } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { StripeBuyButton } from "./stripe-buy-button"
 
@@ -20,59 +20,90 @@ export function PricingSection() {
   ]
 
   const premiumFeatures = [
-    { text: 'Acesso a todos os 30+ estilos', included: true },
-    { text: 'Resultados sem marca d\'água', included: true },
-    { text: 'Alta resolução profissional', included: true },
-    { text: 'Download em PDF ilimitado', included: true },
-    { text: 'Projetos ilimitados', included: true },
-    { text: 'Comparação antes/depois', included: true },
-    { text: 'Exportação em múltiplos formatos', included: true },
-    { text: 'Suporte prioritário', included: true },
+    { text: 'Acesso a todos os 30+ estilos' },
+    { text: 'Resultados sem marca d\'água' },
+    { text: 'Alta resolução profissional' },
+    { text: 'Download em PDF ilimitado' },
+    { text: 'Projetos ilimitados' },
+    { text: 'Comparação antes/depois' },
+    { text: 'Exportação em múltiplos formatos' },
+    { text: 'Suporte prioritário' },
   ]
 
   return (
-    <section className="py-24 px-4 bg-gradient-to-br from-gray-50 to-purple-50" id="pricing">
-      <div className="max-w-5xl mx-auto">
+    <section
+      className="relative py-28 px-4 overflow-hidden"
+      style={{ background: '#0a0a0a' }}
+      id="pricing"
+    >
+      <div className="absolute inset-0 bg-grid-gold opacity-40 pointer-events-none" />
+
+      {/* Center glow */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse, rgba(212,175,55,0.06) 0%, transparent 70%)' }}
+      />
+
+      <div className="relative z-10 max-w-5xl mx-auto">
         {/* Header */}
-        <div className="text-center space-y-4 mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 text-purple-700 text-sm font-medium">
-            <Crown className="w-4 h-4" />
+        <div className="text-center space-y-5 mb-20">
+          <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs tracking-[0.3em] uppercase border"
+            style={{ color: '#d4af37', borderColor: 'rgba(212,175,55,0.25)', background: 'rgba(212,175,55,0.05)' }}
+          >
+            <Crown className="w-3 h-3" />
             Planos e Preços
           </div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900">
+          <h2
+            className="text-4xl sm:text-5xl font-black tracking-tight"
+            style={{ color: '#f0e6c8' }}
+          >
             Escolha Seu Plano
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p
+            className="text-lg max-w-xl mx-auto leading-relaxed"
+            style={{ color: 'rgba(240,230,200,0.5)' }}
+          >
             Comece gratuitamente e faça upgrade quando quiser acesso completo
           </p>
+          <div className="gold-divider max-w-xs mx-auto" />
         </div>
 
-        {/* Plans Grid */}
+        {/* Plans */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* Free Plan */}
-          <div className="bg-white rounded-3xl border-2 border-gray-200 p-8 flex flex-col">
+
+          {/* FREE */}
+          <div
+            className="rounded-2xl p-8 flex flex-col"
+            style={{
+              background: '#0e0e0e',
+              border: '1px solid rgba(212,175,55,0.15)',
+            }}
+          >
             <div className="mb-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm font-medium mb-4">
-                <Zap className="w-4 h-4" />
+              <div
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs tracking-widest uppercase font-semibold mb-5"
+                style={{ color: 'rgba(240,230,200,0.5)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+              >
+                <Zap className="w-3.5 h-3.5" />
                 Gratuito
               </div>
               <div className="flex items-end gap-2 mb-2">
-                <span className="text-5xl font-bold text-gray-900">$0</span>
-                <span className="text-gray-500 pb-1">/ sempre</span>
+                <span className="text-5xl font-black" style={{ color: '#f0e6c8' }}>$0</span>
+                <span className="pb-1 text-sm" style={{ color: 'rgba(240,230,200,0.4)' }}>/ sempre</span>
               </div>
-              <p className="text-gray-600">Experimente sem compromisso</p>
+              <p className="text-sm" style={{ color: 'rgba(240,230,200,0.4)' }}>Experimente sem compromisso</p>
             </div>
 
             <ul className="space-y-3 mb-8 flex-1">
-              {freeFeatures.map((feature, i) => (
+              {freeFeatures.map((f, i) => (
                 <li key={i} className="flex items-center gap-3">
-                  {feature.included ? (
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  ) : (
-                    <X className="w-5 h-5 text-gray-300 flex-shrink-0" />
-                  )}
-                  <span className={feature.included ? 'text-gray-700' : 'text-gray-400'}>
-                    {feature.text}
+                  {f.included
+                    ? <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#d4af37' }} />
+                    : <X className="w-4 h-4 flex-shrink-0" style={{ color: 'rgba(240,230,200,0.2)' }} />
+                  }
+                  <span className="text-sm" style={{ color: f.included ? 'rgba(240,230,200,0.7)' : 'rgba(240,230,200,0.3)' }}>
+                    {f.text}
                   </span>
                 </li>
               ))}
@@ -82,44 +113,70 @@ export function PricingSection() {
               variant="outline"
               size="lg"
               onClick={() => router.push('/result')}
-              className="w-full border-2 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-xl py-6 text-lg"
+              className="w-full rounded-xl py-6 text-sm tracking-widest uppercase font-semibold transition-all duration-300"
+              style={{
+                borderColor: 'rgba(212,175,55,0.25)',
+                color: 'rgba(240,230,200,0.6)',
+                background: 'transparent',
+              }}
             >
               Começar Grátis
             </Button>
           </div>
 
-          {/* Premium Plan */}
-          <div className="bg-purple-600 rounded-3xl border-2 border-purple-500 p-8 flex flex-col relative overflow-hidden shadow-2xl shadow-purple-500/30">
-            {/* Popular Badge */}
-            <div className="absolute top-4 right-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full">
-              MAIS POPULAR
+          {/* PREMIUM */}
+          <div
+            className="rounded-2xl p-8 flex flex-col relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(145deg, #100e08 0%, #0d0b05 100%)',
+              border: '1px solid rgba(212,175,55,0.45)',
+              boxShadow: '0 0 60px rgba(212,175,55,0.08), 0 8px 40px rgba(0,0,0,0.5)'
+            }}
+          >
+            {/* Top glow */}
+            <div
+              className="absolute top-0 left-0 right-0 h-px"
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.6), transparent)' }}
+            />
+
+            {/* Popular badge */}
+            <div
+              className="absolute top-5 right-5 text-xs font-black tracking-widest uppercase px-3 py-1 rounded-full"
+              style={{ background: 'linear-gradient(135deg, #8b6914, #d4af37)', color: '#0a0800' }}
+            >
+              POPULAR
             </div>
 
             <div className="mb-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-sm font-medium mb-4">
-                <Crown className="w-4 h-4 text-yellow-300" />
+              <div
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs tracking-widest uppercase font-semibold mb-5"
+                style={{ color: '#d4af37', background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)' }}
+              >
+                <Diamond className="w-3.5 h-3.5" />
                 Premium
               </div>
               <div className="flex items-end gap-2 mb-2">
-                <span className="text-5xl font-bold text-white">$7</span>
-                <span className="text-purple-300 pb-1">/ único</span>
+                <span className="text-5xl font-black" style={{ color: '#d4af37' }}>$7</span>
+                <span className="pb-1 text-sm" style={{ color: 'rgba(212,175,55,0.5)' }}>/ pagamento único</span>
               </div>
-              <p className="text-purple-200">Pagamento único · Acesso vitalício</p>
+              <p className="text-sm" style={{ color: 'rgba(212,175,55,0.55)' }}>Acesso vitalício</p>
             </div>
 
             <ul className="space-y-3 mb-8 flex-1">
-              {premiumFeatures.map((feature, i) => (
+              {premiumFeatures.map((f, i) => (
                 <li key={i} className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                  <span className="text-white">{feature.text}</span>
+                  <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#d4af37' }} />
+                  <span className="text-sm" style={{ color: 'rgba(240,230,200,0.75)' }}>{f.text}</span>
                 </li>
               ))}
             </ul>
 
-            {/* Stripe Buy Button nativo */}
             <StripeBuyButton className="flex justify-center" />
 
-            <p className="text-center text-purple-300 text-sm mt-3">
+            <p
+              className="text-center text-xs mt-3 tracking-wider"
+              style={{ color: 'rgba(212,175,55,0.4)' }}
+            >
               Sem assinatura · Sem taxas ocultas
             </p>
           </div>

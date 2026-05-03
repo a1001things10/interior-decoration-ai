@@ -1,87 +1,89 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
-import { Zap, Clock, Palette, Image as ImageIcon, Smile, Infinity } from "lucide-react"
+import { Zap, Clock, Palette, Image as ImageIcon, Smile, Infinity, Diamond } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 
 export function FeaturesSection() {
   const { t } = useLanguage()
-  
+
   const features = [
-    {
-      icon: Zap,
-      title: t.feature1,
-      description: t.feature1Desc,
-      gradient: "from-yellow-400 to-orange-500"
-    },
-    {
-      icon: Clock,
-      title: t.feature2,
-      description: t.feature2Desc,
-      gradient: "from-blue-400 to-blue-600"
-    },
-    {
-      icon: Palette,
-      title: t.feature3,
-      description: t.feature3Desc,
-      gradient: "from-purple-400 to-pink-500"
-    },
-    {
-      icon: ImageIcon,
-      title: t.feature4,
-      description: t.feature4Desc,
-      gradient: "from-green-400 to-emerald-500"
-    },
-    {
-      icon: Smile,
-      title: t.feature5,
-      description: t.feature5Desc,
-      gradient: "from-pink-400 to-rose-500"
-    },
-    {
-      icon: Infinity,
-      title: t.feature6,
-      description: t.feature6Desc,
-      gradient: "from-cyan-400 to-blue-500"
-    }
+    { icon: Zap, title: t.feature1, description: t.feature1Desc },
+    { icon: Clock, title: t.feature2, description: t.feature2Desc },
+    { icon: Palette, title: t.feature3, description: t.feature3Desc },
+    { icon: ImageIcon, title: t.feature4, description: t.feature4Desc },
+    { icon: Smile, title: t.feature5, description: t.feature5Desc },
+    { icon: Infinity, title: t.feature6, description: t.feature6Desc },
   ]
 
   return (
-    <section className="py-20 px-4 bg-white">
-      <div className="max-w-7xl mx-auto">
+    <section
+      className="relative py-28 px-4 overflow-hidden"
+      style={{ background: 'linear-gradient(180deg, #080808 0%, #0d0b07 100%)' }}
+    >
+      <div className="absolute inset-0 bg-grid-gold opacity-50 pointer-events-none" />
+
+      {/* Gold radial glow */}
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse, rgba(212,175,55,0.05) 0%, transparent 70%)' }}
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center space-y-4 mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 text-purple-700 text-sm font-medium">
-            <Zap className="w-4 h-4" />
+        <div className="text-center space-y-5 mb-20">
+          <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs tracking-[0.3em] uppercase border"
+            style={{ color: '#d4af37', borderColor: 'rgba(212,175,55,0.25)', background: 'rgba(212,175,55,0.05)' }}
+          >
+            <Diamond className="w-3 h-3" />
             {t.whyChoose}
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">
+          <h2
+            className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight"
+            style={{ color: '#f0e6c8' }}
+          >
             {t.whyChooseTitle}
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p
+            className="text-lg max-w-2xl mx-auto leading-relaxed"
+            style={{ color: 'rgba(240,230,200,0.5)' }}
+          >
             {t.whyChooseSubtitle}
           </p>
+          <div className="gold-divider max-w-xs mx-auto" />
         </div>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Features grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => {
             const Icon = feature.icon
             return (
-              <Card 
+              <div
                 key={index}
-                className="p-8 border-2 hover:border-purple-500 transition-all duration-300 hover:shadow-2xl hover:scale-105 bg-white group"
+                className="gold-card relative p-7 rounded-2xl group transition-all duration-400 hover:scale-[1.02] cursor-default"
               >
-                <div className={`w-14 h-14 bg-gradient-to-br ${feature.gradient} rounded-xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon className="w-7 h-7 text-white" />
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(139,105,20,0.4), rgba(212,175,55,0.15))',
+                    border: '1px solid rgba(212,175,55,0.3)',
+                  }}
+                >
+                  <Icon className="w-5 h-5" style={{ color: '#d4af37' }} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                <h3
+                  className="text-lg font-bold mb-2 tracking-wide"
+                  style={{ color: '#f0e6c8' }}
+                >
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: 'rgba(240,230,200,0.48)' }}
+                >
                   {feature.description}
                 </p>
-              </Card>
+              </div>
             )
           })}
         </div>
